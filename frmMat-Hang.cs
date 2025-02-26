@@ -44,29 +44,44 @@ namespace WindowsFormsApp1
         {
             try
             {
-                // Khởi tạo dataset và TableAdapter
                 dataset = new TayVinSieuVipDataSet();
-                dvtAdapter = new DonViTinhTableAdapter();
-                dvtAdapter.Fill(dataset.DonViTinh); // Lấy dữ liệu từ SQL Server
 
-                // Kiểm tra xem có dữ liệu không
+                // Tải dữ liệu đơn vị tính
+                dvtAdapter = new DonViTinhTableAdapter();
+                dvtAdapter.Fill(dataset.DonViTinh);
                 if (dataset.DonViTinh.Rows.Count == 0)
                 {
-                    MessageBox.Show("Không có đơn vị tính trong cơ sở dữ liệu!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    MessageBox.Show("Không có đơn vị tính trong CSDL!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    cbDonViTinh.DataSource = dataset.DonViTinh;
+                    cbDonViTinh.DisplayMember = "TenDVT";
+                    cbDonViTinh.ValueMember = "MaDVT";
+                    cbDonViTinh.SelectedIndex = -1;
                 }
 
-                // Gán dữ liệu vào ComboBox
-                cbDonViTinh.DataSource = dataset.DonViTinh;
-                cbDonViTinh.DisplayMember = "TenDVT"; // Hiển thị tên đơn vị tính
-                cbDonViTinh.ValueMember = "MaDVT";   // Lấy mã đơn vị tính khi chọn
-                cbDonViTinh.SelectedIndex = -1;      // Không chọn mặc định
+                // Tải dữ liệu nhà cung cấp
+                nccAdapter = new NhaCungCapTableAdapter();
+                nccAdapter.Fill(dataset.NhaCungCap);
+                if (dataset.NhaCungCap.Rows.Count == 0)
+                {
+                    MessageBox.Show("Không có nhà cung cấp trong CSDL!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    cbNhaCungCap.DataSource = dataset.NhaCungCap;
+                    cbNhaCungCap.DisplayMember = "TenNCC";
+                    cbNhaCungCap.ValueMember = "MaNCC";
+                    cbNhaCungCap.SelectedIndex = -1;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi tải dữ liệu đơn vị tính: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi khi tải dữ liệu combobox: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -157,5 +172,7 @@ namespace WindowsFormsApp1
             nudDonGia.Value = 0;
             selectedMaMH = -1;
         }
+
+      
     }
 }
